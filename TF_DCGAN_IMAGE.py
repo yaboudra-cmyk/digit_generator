@@ -6,7 +6,6 @@ import numpy as np
 import os
 import PIL
 from tensorflow.keras import layers
-import tensorflow_docs.vis.embed as embed
 from tensorflow.keras.models import load_model
 import time
 
@@ -135,19 +134,17 @@ def train(dataset, epochs):
       gen_loss, disc_loss = train_step(image_batch)
 
     # Produce images for the GIF as you go
-    display.clear_output(wait=True)
     generate_and_save_images(generator,
                              epoch + 1,
                              seed)
 
-    # Save the model every 15 epochs
+    # Save the model every 10 epochs
     if (epoch + 1) % 10 == 0:
       checkpoint.save(file_prefix = checkpoint_prefix)
 
     print(f'Epoch {epoch+1}, Generator Loss: {gen_loss:.4f}, Discriminator Loss: {disc_loss:.4f}, Time: {time.time()-start:.2f} sec')
 
   # Generate after the final epoch
-  display.clear_output(wait=True)
   generate_and_save_images(generator,
                            epochs,
                            seed)
@@ -187,8 +184,6 @@ with imageio.get_writer(anim_file, mode='I') as writer:
     writer.append_data(image)
   image = imageio.imread(filename)
   writer.append_data(image)
-
-embed.embed_file(anim_file)
 
 os.makedirs('saved_models', exist_ok=True)
 
